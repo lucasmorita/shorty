@@ -2,8 +2,9 @@ package org.eldron.shorty.controller;
 
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.service.UrlService;
-import org.eldron.shorty.vo.ShortenUrlRequest;
 import org.eldron.shorty.vo.Url;
+import org.eldron.shorty.vo.request.ShortenUrlRequest;
+import org.eldron.shorty.vo.response.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,18 +24,20 @@ public class UrlController {
     }
 
     @GetMapping("/{shortenedUrlId}")
-    public ResponseEntity getOriginalUrl(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
+    public ResponseEntity<BaseResponse> getOriginalUrl(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
         try {
             final Url url = urlService.getOriginalUrl(shortenedUrlId);
-            return ResponseEntity.ok().body(url);
+            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse("ok", url));
         } catch (final UrlNotFoundException e) {
-            return ResponseEntity.notFound().build();
+            final var response = new BaseResponse("not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
 
     @PostMapping
-    public ResponseEntity shortenUrl(@RequestBody final ShortenUrlRequest shortenUrlRequest) {
+    public ResponseEntity<BaseResponse> shortenUrl(@RequestBody final ShortenUrlRequest shortenUrlRequest) {
         final Url shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
-        return ResponseEntity.status(HttpStatus.CREATED).body(shortenedUrl);
+        final var response = new BaseResponse("ok", shortenedUrl);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

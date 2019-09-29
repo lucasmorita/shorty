@@ -17,7 +17,8 @@ public class Url {
     @JsonProperty("url")
     private String originalUrl;
 
-    protected Url() {}
+    protected Url() {
+    }
 
     public Url(final String id, final String originalUrl) {
         this.id = id;

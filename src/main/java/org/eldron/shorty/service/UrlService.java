@@ -1,5 +1,6 @@
 package org.eldron.shorty.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.hash.UrlHash;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UrlService {
     private final UrlRepository urlRepository;
 
@@ -36,6 +38,7 @@ public class UrlService {
                 .build();
 
         urlRepository.save(urlHash);
+
         return Url.builder()
                 .id(urlHash.getId())
                 .originalUrl(urlHash.getOriginalUrl())

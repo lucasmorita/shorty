@@ -2,8 +2,8 @@ package org.eldron.shorty.controller;
 
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.service.UrlService;
-import org.eldron.shorty.vo.ShortenUrlRequest;
 import org.eldron.shorty.vo.Url;
+import org.eldron.shorty.vo.request.ShortenUrlRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

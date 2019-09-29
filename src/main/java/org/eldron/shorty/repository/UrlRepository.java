@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UrlRepository extends CrudRepository<UrlHash, Long> {
+public interface UrlRepository extends CrudRepository<UrlHash, String> {
     Optional<UrlHash> findById(final String id);
 }
