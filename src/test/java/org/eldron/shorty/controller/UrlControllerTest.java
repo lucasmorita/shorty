@@ -1,7 +1,6 @@
 package org.eldron.shorty.controller;
 
 import org.eldron.shorty.exception.UrlNotFoundException;
-import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.service.UrlService;
 import org.eldron.shorty.vo.ShortenUrlRequest;
 import org.eldron.shorty.vo.Url;
