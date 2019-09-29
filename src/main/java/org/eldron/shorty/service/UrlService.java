@@ -5,6 +5,7 @@ import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.vo.Url;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +31,17 @@ public class UrlService {
         throw new UrlNotFoundException("Url was not found");
     }
 
-    public ResponseEntity shortenUrl(final String url) {
-        final var urlEntity = UrlHash.builder()
+    public Url shortenUrl(final String url) {
+        final var urlHash = UrlHash.builder()
                 .id(urlIdGenerator())
                 .originalUrl(url)
                 .build();
 
-        urlRepository.save(urlEntity);
-        return ResponseEntity.ok().body(urlEntity);
+        urlRepository.save(urlHash);
+        return Url.builder()
+                .id(urlHash.getId())
+                .originalUrl(urlHash.getOriginalUrl())
+                .build();
     }
 
     private String urlIdGenerator() {
