@@ -3,6 +3,7 @@ package org.eldron.shorty.controller;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.service.UrlService;
+import org.eldron.shorty.vo.ShortenUrlRequest;
 import org.eldron.shorty.vo.Url;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,13 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UrlControllerTest {
-    @Mock
-    private UrlRepository urlRepository;
-
     @Mock
     private UrlService urlService;
 
@@ -51,5 +50,17 @@ public class UrlControllerTest {
 
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void whenRequestToShortenUrl() {
+        final var url = "www.google.com";
+        when(urlService.shortenUrl(url)).thenReturn(any(Url.class));
+
+        final ShortenUrlRequest request = new ShortenUrlRequest(url);
+        final ResponseEntity response = urlController.shortenUrl(request);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 }

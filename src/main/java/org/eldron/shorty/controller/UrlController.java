@@ -2,6 +2,7 @@ package org.eldron.shorty.controller;
 
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.service.UrlService;
+import org.eldron.shorty.vo.ShortenUrlRequest;
 import org.eldron.shorty.vo.Url;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class UrlController {
     }
 
     @PostMapping
-    public ResponseEntity shortenUrl(@RequestBody final Url url) {
-        final Url shortenedUrl = urlService.shortenUrl(url.getOriginalUrl());
+    public ResponseEntity shortenUrl(@RequestBody final ShortenUrlRequest shortenUrlRequest) {
+        final Url shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
         return ResponseEntity.status(HttpStatus.CREATED).body(shortenedUrl);
     }
 }
