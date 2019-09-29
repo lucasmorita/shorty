@@ -22,7 +22,7 @@ public class UrlController {
     }
 
     @GetMapping("/{shortenedUrlId}")
-    public ResponseEntity redirect(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
+    public ResponseEntity getOriginalUrl(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
         try {
             final Url url = urlService.getOriginalUrl(shortenedUrlId);
             return ResponseEntity.ok().body(url);

@@ -1,12 +1,10 @@
 package org.eldron.shorty.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.exception.UrlNotFoundException;
+import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.vo.Url;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
