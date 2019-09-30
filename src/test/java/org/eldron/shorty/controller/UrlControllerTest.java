@@ -1,8 +1,11 @@
 package org.eldron.shorty.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eldron.shorty.config.EmbeddedRedisConfiguration;
-import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.repository.UrlRepository;
+import org.eldron.shorty.vo.Url;
+import org.eldron.shorty.vo.response.BaseResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +30,6 @@ public class UrlControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private UrlRepository urlRepository;
-
     @Test
     public void whenRequestUrlThatDoesntExist_thenReturnNotFound() throws Exception {
         final var shortenedUrl = "abcd";
@@ -37,26 +37,6 @@ public class UrlControllerTest {
         mockMvc.perform(get("/shorten/" + shortenedUrl))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
-    }
-
-    @Test
-    public void whenRequestUrlExists_thenReturnOriginalUrl() throws Exception {
-        // Given
-        final var shortenedUrl = "abcd";
-        final var originalUrl = "www.google.com";
-        final var url = UrlHash.builder()
-                .id(shortenedUrl)
-                .originalUrl(originalUrl)
-                .build();
-        urlRepository.save(url);
-
-        // When / Then
-        final MvcResult mvcResult = mockMvc.perform(get("/shorten/" + shortenedUrl))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andReturn();
-
-        assertThat(mvcResult.getResponse().getContentAsString()).contains(originalUrl);
     }
 
     @Test
@@ -68,6 +48,30 @@ public class UrlControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request))
                 .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+
+        assertThat(mvcResult.getResponse().getContentAsString()).contains(url);
+    }
+
+    @Test
+    public void whenRequestUrlExists_thenReturnOriginalUrl() throws Exception {
+        final var url = "www.google.com";
+        final var request = "{\"url\": \"" + url + "\"}";
+
+        final MvcResult mvcPostResult = mockMvc.perform(post("/shorten")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+
+        final ObjectMapper mapper = new ObjectMapper();
+        final String response = mvcPostResult.getResponse().getContentAsString();
+        final BaseResponse<Url> baseResponse = mapper.readValue(response, new TypeReference<BaseResponse<Url>>() {});
+
+        final MvcResult mvcResult = mockMvc.perform(get("/shorten/" + baseResponse.getData().getId()))
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
 

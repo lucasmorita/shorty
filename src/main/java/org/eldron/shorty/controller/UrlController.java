@@ -27,7 +27,7 @@ public class UrlController {
     public ResponseEntity<BaseResponse> getOriginalUrl(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
         try {
             final Url url = urlService.getOriginalUrl(shortenedUrlId);
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse("ok", url));
+            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>("ok", url));
         } catch (final UrlNotFoundException e) {
             final var response = new BaseResponse("not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -37,7 +37,7 @@ public class UrlController {
     @PostMapping
     public ResponseEntity<BaseResponse> shortenUrl(@RequestBody final ShortenUrlRequest shortenUrlRequest) {
         final Url shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
-        final var response = new BaseResponse("ok", shortenedUrl);
+        final var response = new BaseResponse<>("ok", shortenedUrl);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

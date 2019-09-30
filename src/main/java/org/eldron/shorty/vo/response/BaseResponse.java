@@ -3,15 +3,18 @@ package org.eldron.shorty.vo.response;
 import lombok.ToString;
 
 @ToString
-public class BaseResponse {
+public class BaseResponse<T> {
     private String message;
-    private Object data;
+    private T data;
 
-    public BaseResponse(String message) {
+    protected BaseResponse() {
+    }
+
+    public BaseResponse(final String message) {
         this.message = message;
     }
 
-    public BaseResponse(String message, Object data) {
+    public BaseResponse(final String message, final T data) {
         this.message = message;
         this.data = data;
     }
@@ -24,11 +27,11 @@ public class BaseResponse {
         this.message = message;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(final T data) {
         this.data = data;
     }
 }
