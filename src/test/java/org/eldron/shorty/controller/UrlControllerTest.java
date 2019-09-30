@@ -1,65 +1,76 @@
 package org.eldron.shorty.controller;
 
-import org.eldron.shorty.exception.UrlNotFoundException;
-import org.eldron.shorty.service.UrlService;
-import org.eldron.shorty.vo.Url;
-import org.eldron.shorty.vo.request.ShortenUrlRequest;
+import org.eldron.shorty.config.EmbeddedRedisConfiguration;
+import org.eldron.shorty.hash.UrlHash;
+import org.eldron.shorty.repository.UrlRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = EmbeddedRedisConfiguration.class)
+@AutoConfigureMockMvc
 public class UrlControllerTest {
-    @Mock
-    private UrlService urlService;
 
-    @InjectMocks
-    private UrlController urlController;
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private UrlRepository urlRepository;
 
     @Test
-    public void whenRequestUrlThatDoesntExist_thenReturnNotFound() throws UrlNotFoundException {
+    public void whenRequestUrlThatDoesntExist_thenReturnNotFound() throws Exception {
         final var shortenedUrl = "abcd";
-        when(urlService.getOriginalUrl(shortenedUrl)).thenThrow(UrlNotFoundException.class);
 
-        final ResponseEntity response = urlController.getOriginalUrl(shortenedUrl);
-
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        mockMvc.perform(get("/shorten/" + shortenedUrl))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
-    public void whenRequestUrlExists_thenReturnOriginalUrl() throws UrlNotFoundException {
+    public void whenRequestUrlExists_thenReturnOriginalUrl() throws Exception {
+        // Given
         final var shortenedUrl = "abcd";
         final var originalUrl = "www.google.com";
-        final var url = Url.builder()
+        final var url = UrlHash.builder()
                 .id(shortenedUrl)
                 .originalUrl(originalUrl)
                 .build();
-        when(urlService.getOriginalUrl(shortenedUrl)).thenReturn(url);
+        urlRepository.save(url);
 
-        final ResponseEntity response = urlController.getOriginalUrl(shortenedUrl);
+        // When / Then
+        final MvcResult mvcResult = mockMvc.perform(get("/shorten/" + shortenedUrl))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(mvcResult.getResponse().getContentAsString()).contains(originalUrl);
     }
 
     @Test
-    public void whenRequestToShortenUrl() {
+    public void whenRequestToShortenUrl() throws Exception {
         final var url = "www.google.com";
-        when(urlService.shortenUrl(url)).thenReturn(any(Url.class));
+        final var request = "{\"url\": \"" + url + "\"}";
 
-        final ShortenUrlRequest request = new ShortenUrlRequest(url);
-        final ResponseEntity response = urlController.shortenUrl(request);
+        final MvcResult mvcResult = mockMvc.perform(post("/shorten")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(request))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
 
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(mvcResult.getResponse().getContentAsString()).contains(url);
     }
 }
