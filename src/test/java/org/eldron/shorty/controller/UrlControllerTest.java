@@ -3,7 +3,6 @@ package org.eldron.shorty.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eldron.shorty.config.EmbeddedRedisConfiguration;
-import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.vo.Url;
 import org.eldron.shorty.vo.response.BaseResponse;
 import org.junit.Test;
@@ -40,7 +39,7 @@ public class UrlControllerTest {
     }
 
     @Test
-    public void whenRequestToShortenUrl() throws Exception {
+    public void whenRequestToShortenUrl_thenReturnSavedUrl() throws Exception {
         final var url = "www.google.com";
         final var request = "{\"url\": \"" + url + "\"}";
 

@@ -19,6 +19,13 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
+    /**
+     * Gets original url from the shortened
+     *
+     * @param shortenedUrlId the shortened url id.
+     * @return the vo of the url
+     * @throws UrlNotFoundException if the shortened url doesn't exist
+     */
     public Url getOriginalUrl(final String shortenedUrlId) throws UrlNotFoundException {
         final Optional<UrlHash> url = urlRepository.findById(shortenedUrlId);
 
@@ -31,6 +38,12 @@ public class UrlService {
         throw new UrlNotFoundException("Url was not found");
     }
 
+    /**
+     * Saves a new url.
+     *
+     * @param url the original url to save.
+     * @return the vo of the url
+     */
     public Url shortenUrl(final String url) {
         final var urlHash = UrlHash.builder()
                 .id(urlIdGenerator())

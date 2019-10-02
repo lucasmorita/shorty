@@ -2,6 +2,11 @@ package org.eldron.shorty.vo.response;
 
 import lombok.ToString;
 
+/**
+ * Base http response object. This vo should be always used as the http return json.
+ *
+ * @param <T> The object to be returned
+ */
 @ToString
 public class BaseResponse<T> {
     private String message;
