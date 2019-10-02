@@ -14,12 +14,18 @@ docker-compose up -d
 docker run shorty:version
 ```
 
+**Note**: the project is configured to build using openjdk 11, if you
+need to change it to oracle or other jdk then change the `gradle.properties`
+file.
+
 ## Endpoints
 
-```json
-/shorten
+### Shorten url
+```
+POST /shorten
 ```
 
-```json
-/shorten/{shortenedUrl}
+### Get original url from shortened
+```
+GET /shorten/{shortenedUrl}
 ```
