@@ -1,5 +1,7 @@
 # shorty
 
+[![Build Status](https://travis-ci.org/3ldr0n/shorty.svg?branch=master)](https://travis-ci.org/3ldr0n/shorty)
+
 A simple URL shortener, built using Java 11 and Redis.
 
 ## Local environment
