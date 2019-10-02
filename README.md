@@ -16,9 +16,8 @@ docker-compose up -d
 docker run shorty:version
 ```
 
-**Note**: the project is configured to build using openjdk 11, if you
-need to change it to oracle or other jdk then change the `gradle.properties`
-file.
+**Note**: the project is configured to build using java 11, if you
+need to run in an older version you'll need to adapt some parts of the code.
 
 ## Endpoints
 
