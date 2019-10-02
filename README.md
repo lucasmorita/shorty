@@ -1,6 +1,6 @@
 # shorty
 
-Simple URL shortener.
+A simple URL shortener, built using Java 11 and Redis.
 
 ## Local environment
 
