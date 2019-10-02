@@ -22,8 +22,17 @@ need to run in an older version you'll need to adapt some parts of the code.
 ## Endpoints
 
 ### Shorten url
+
 ```
 POST /shorten
+```
+
+#### Payload example
+
+```json
+{
+  "url": "www.github.com/3ldr0n/shorty"
+}
 ```
 
 ### Get original url from shortened
