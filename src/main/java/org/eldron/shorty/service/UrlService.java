@@ -2,11 +2,15 @@ package org.eldron.shorty.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.eldron.shorty.exception.InvalidUrlException;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.vo.Url;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -14,9 +18,11 @@ import java.util.Optional;
 @Slf4j
 public class UrlService {
     private final UrlRepository urlRepository;
+    private final RestTemplate restTemplate;
 
-    public UrlService(final UrlRepository urlRepository) {
+    public UrlService(final UrlRepository urlRepository, final RestTemplate restTemplate) {
         this.urlRepository = urlRepository;
+        this.restTemplate = restTemplate;
     }
 
     /**
@@ -44,7 +50,9 @@ public class UrlService {
      * @param url the original url to save.
      * @return the vo of the url
      */
-    public Url shortenUrl(final String url) {
+    public Url shortenUrl(final String url) throws InvalidUrlException {
+        validateUrl(url);
+
         final var urlHash = UrlHash.builder()
                 .id(urlIdGenerator())
                 .originalUrl(url)
@@ -56,6 +64,20 @@ public class UrlService {
                 .id(urlHash.getId())
                 .originalUrl(urlHash.getOriginalUrl())
                 .build();
+    }
+
+    private void validateUrl(final String url) throws InvalidUrlException {
+        final String[] schemes = {"http", "https"};
+        final UrlValidator validator = new UrlValidator(schemes);
+        if (!validator.isValid(url)) {
+            throw new InvalidUrlException("Invalid url");
+        }
+
+        try {
+            restTemplate.getForObject(url, String.class);
+        } catch (final RestClientException e) {
+            throw new InvalidUrlException(e);
+        }
     }
 
     private String urlIdGenerator() {

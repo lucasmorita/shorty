@@ -1,5 +1,6 @@
 package org.eldron.shorty.controller;
 
+import org.eldron.shorty.exception.InvalidUrlException;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.service.UrlService;
 import org.eldron.shorty.vo.Url;
@@ -36,8 +37,13 @@ public class UrlController {
 
     @PostMapping
     public ResponseEntity<BaseResponse> shortenUrl(@RequestBody final ShortenUrlRequest shortenUrlRequest) {
-        final Url shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
-        final var response = new BaseResponse<>("ok", shortenedUrl);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        try {
+            final Url shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
+            final var response = new BaseResponse<>("ok", shortenedUrl);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (final InvalidUrlException e) {
+            final var response = new BaseResponse<>("Invalid url");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 }
