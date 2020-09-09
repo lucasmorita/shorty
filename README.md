@@ -1,6 +1,6 @@
 # shorty
 
-[![Build Status](https://travis-ci.com/3ldr0n/shorty.svg?branch=master)](https://travis-ci.com/3ldr0n/shorty)
+[![Build Status](https://travis-ci.com/eaneto/shorty.svg?branch=master)](https://travis-ci.com/eaneto/shorty)
 
 A simple URL shortener, built using Java 11 and Redis.
 
