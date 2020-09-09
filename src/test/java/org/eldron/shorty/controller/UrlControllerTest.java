@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eldron.shorty.config.EmbeddedRedisConfiguration;
 import org.eldron.shorty.vo.Url;
-import org.eldron.shorty.vo.response.BaseResponse;
+import org.eldron.shorty.vo.response.ErrorResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,8 +33,7 @@ public class UrlControllerTest {
         final var shortenedUrl = "abcd";
 
         mockMvc.perform(get("/shorten/" + shortenedUrl))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -43,7 +41,7 @@ public class UrlControllerTest {
         final var url = "http://www.google.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
-        final MvcResult mvcResult = mockMvc.perform(post("/shorten")
+        final var mvcResult = mockMvc.perform(post("/shorten")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request))
                 .andExpect(status().isCreated())
@@ -58,7 +56,7 @@ public class UrlControllerTest {
         final var url = "www.google.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
-        final MvcResult mvcResult = mockMvc.perform(post("/shorten")
+        final var mvcResult = mockMvc.perform(post("/shorten")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request))
                 .andExpect(status().isBadRequest())
@@ -73,7 +71,7 @@ public class UrlControllerTest {
         final var url = "http://www.completely-invalid-url.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
-        final MvcResult mvcResult = mockMvc.perform(post("/shorten")
+        final var mvcResult = mockMvc.perform(post("/shorten")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request))
                 .andExpect(status().isBadRequest())
@@ -88,19 +86,18 @@ public class UrlControllerTest {
         final var url = "http://www.google.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
-        final MvcResult mvcPostResult = mockMvc.perform(post("/shorten")
+        final var mvcPostResult = mockMvc.perform(post("/shorten")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(request))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
 
-        final ObjectMapper mapper = new ObjectMapper();
-        final String response = mvcPostResult.getResponse().getContentAsString();
-        final BaseResponse<Url> baseResponse = mapper.readValue(response, new TypeReference<BaseResponse<Url>>() {
-        });
+        final var mapper = new ObjectMapper();
+        final var response = mvcPostResult.getResponse().getContentAsString();
+        final var responseUrl = mapper.readValue(response, Url.class);
 
-        final MvcResult mvcResult = mockMvc.perform(get("/shorten/" + baseResponse.getData().getId()))
+        final var mvcResult = mockMvc.perform(get("/shorten/" + responseUrl.getShortUrl()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();

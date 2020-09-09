@@ -31,7 +31,7 @@ POST /shorten
 
 ```json
 {
-  "url": "www.github.com/3ldr0n/shorty"
+  "url": "www.github.com/eaneto/shorty"
 }
 ```
 

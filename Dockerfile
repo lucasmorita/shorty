@@ -13,4 +13,4 @@ WORKDIR /shorty
 
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar", "-Xms512", "-Xmx1024"]
+ENTRYPOINT ["java", "-jar", "app.jar", "-Xms128", "-Xmx512"]

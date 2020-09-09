@@ -4,7 +4,6 @@ import org.eldron.shorty.exception.InvalidUrlException;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.repository.UrlRepository;
-import org.eldron.shorty.vo.Url;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -44,11 +43,11 @@ public class UrlServiceTest {
                         .originalUrl(originalUrl)
                         .build()));
 
-        final Url url = urlService.getOriginalUrl(urlId);
+        final var url = urlService.getOriginalUrl(urlId);
 
         assertThat(url).isNotNull();
-        assertThat(url.getOriginalUrl()).isNotNull();
-        assertThat(url.getOriginalUrl()).isEqualTo(originalUrl);
+        assertThat(url.getUrl()).isNotNull();
+        assertThat(url.getUrl()).isEqualTo(originalUrl);
     }
 
     @Test(expected = UrlNotFoundException.class)
@@ -68,11 +67,11 @@ public class UrlServiceTest {
         when(urlRepository.save(any(UrlHash.class)))
                 .thenReturn(eq(any(UrlHash.class)));
 
-        final Url shortenedUrl = urlService.shortenUrl(url);
+        final var shortenedUrl = urlService.shortenUrl(url);
 
         assertThat(shortenedUrl).isNotNull();
-        assertThat(shortenedUrl.getOriginalUrl()).isEqualTo(url);
-        assertThat(shortenedUrl.getId().length()).isEqualTo(10);
+        assertThat(shortenedUrl.getUrl()).isEqualTo(url);
+        assertThat(shortenedUrl.getShortUrl().length()).isEqualTo(10);
     }
 
     @Test(expected = InvalidUrlException.class)

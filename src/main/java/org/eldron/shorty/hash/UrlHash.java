@@ -1,28 +1,19 @@
 package org.eldron.shorty.hash;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 
-@RedisHash("urls")
+@RedisHash(value = "urls", timeToLive = 600L)
 @Getter
-@ToString
-@EqualsAndHashCode
 @Builder
+@AllArgsConstructor
 public class UrlHash implements Serializable {
     @Id
-    private String id;
-    private String originalUrl;
-
-    protected UrlHash() {}
-
-    public UrlHash(final String id, final String originalUrl) {
-        this.id = id;
-        this.originalUrl = originalUrl;
-    }
+    private final String id;
+    private final String originalUrl;
 }

@@ -1,27 +1,15 @@
 package org.eldron.shorty.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
-@Builder
-@EqualsAndHashCode
-@ToString
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Url {
-    @JsonProperty("shortUrl")
-    private String id;
-
-    @JsonProperty("url")
-    private String originalUrl;
-
-    protected Url() {
-    }
-
-    public Url(final String id, final String originalUrl) {
-        this.id = id;
-        this.originalUrl = originalUrl;
-    }
+    private String shortUrl;
+    private String url;
 }

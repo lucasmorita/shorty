@@ -1,11 +1,8 @@
 package org.eldron.shorty.controller;
 
-import org.eldron.shorty.exception.InvalidUrlException;
-import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.service.UrlService;
 import org.eldron.shorty.vo.Url;
 import org.eldron.shorty.vo.request.ShortenUrlRequest;
-import org.eldron.shorty.vo.response.BaseResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,25 +22,14 @@ public class UrlController {
     }
 
     @GetMapping("/{shortenedUrlId}")
-    public ResponseEntity<BaseResponse> getOriginalUrl(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
-        try {
-            final Url url = urlService.getOriginalUrl(shortenedUrlId);
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>("ok", url));
-        } catch (final UrlNotFoundException e) {
-            final var response = new BaseResponse("not found");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        }
+    public ResponseEntity<Url> getOriginalUrl(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
+        final var url = urlService.getOriginalUrl(shortenedUrlId);
+        return ResponseEntity.status(HttpStatus.OK).body(url);
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse> shortenUrl(@RequestBody final ShortenUrlRequest shortenUrlRequest) {
-        try {
-            final Url shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
-            final var response = new BaseResponse<>("ok", shortenedUrl);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        } catch (final InvalidUrlException e) {
-            final var response = new BaseResponse<>("Invalid url");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+    public ResponseEntity<Url> shortenUrl(@RequestBody final ShortenUrlRequest shortenUrlRequest) {
+        final var shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
+        return ResponseEntity.status(HttpStatus.CREATED).body(shortenedUrl);
     }
 }
