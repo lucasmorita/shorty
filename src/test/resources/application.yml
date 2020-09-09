@@ -2,3 +2,6 @@ spring:
   redis:
     host: localhost
     port: 6370
+
+http:
+  timeout: 10

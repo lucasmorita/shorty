@@ -1,8 +1,8 @@
 package org.eldron.shorty.exception;
 
-public class InvalidUrlException extends Exception {
-    public InvalidUrlException(final String message) {
-        super(message);
+public class InvalidUrlException extends RuntimeException {
+    public InvalidUrlException(final String url) {
+        super("Invalid url, url=" + url);
     }
 
     public InvalidUrlException(final Throwable cause) {

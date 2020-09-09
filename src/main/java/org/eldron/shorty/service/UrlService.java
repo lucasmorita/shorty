@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
-
 @Service
-@Slf4j
 public class UrlService {
     private final UrlRepository urlRepository;
     private final RestTemplate restTemplate;
@@ -32,16 +29,16 @@ public class UrlService {
      * @return the vo of the url
      * @throws UrlNotFoundException if the shortened url doesn't exist
      */
-    public Url getOriginalUrl(final String shortenedUrlId) throws UrlNotFoundException {
-        final Optional<UrlHash> url = urlRepository.findById(shortenedUrlId);
+    public Url getOriginalUrl(final String shortenedUrlId) {
+        final var url = urlRepository.findById(shortenedUrlId);
 
         if (url.isPresent()) {
             return Url.builder()
-                    .id(url.get().getId())
-                    .originalUrl(url.get().getOriginalUrl())
+                    .shortUrl(url.get().getId())
+                    .url(url.get().getOriginalUrl())
                     .build();
         }
-        throw new UrlNotFoundException("Url was not found");
+        throw new UrlNotFoundException();
     }
 
     /**
@@ -50,7 +47,7 @@ public class UrlService {
      * @param url the original url to save.
      * @return the vo of the url
      */
-    public Url shortenUrl(final String url) throws InvalidUrlException {
+    public Url shortenUrl(final String url) {
         validateUrl(url);
 
         final var urlHash = UrlHash.builder()
@@ -61,16 +58,16 @@ public class UrlService {
         urlRepository.save(urlHash);
 
         return Url.builder()
-                .id(urlHash.getId())
-                .originalUrl(urlHash.getOriginalUrl())
+                .shortUrl(urlHash.getId())
+                .url(urlHash.getOriginalUrl())
                 .build();
     }
 
-    private void validateUrl(final String url) throws InvalidUrlException {
-        final String[] schemes = {"http", "https"};
-        final UrlValidator validator = new UrlValidator(schemes);
+    private void validateUrl(final String url) {
+        final var schemes = new String[]{"http", "https"};
+        final var validator = new UrlValidator(schemes);
         if (!validator.isValid(url)) {
-            throw new InvalidUrlException("Invalid url");
+            throw new InvalidUrlException(url);
         }
 
         try {

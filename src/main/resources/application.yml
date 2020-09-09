@@ -1,3 +1,8 @@
 spring:
   redis:
     host: localhost
+    pool:
+      max-active: 5
+
+http:
+  timeout: 5
