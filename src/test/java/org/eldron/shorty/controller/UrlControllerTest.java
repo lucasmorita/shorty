@@ -42,10 +42,10 @@ public class UrlControllerTest {
         final var request = "{\"url\": \"" + url + "\"}";
 
         final var mvcResult = mockMvc.perform(post("/shorten")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getContentAsString()).contains(url);
@@ -57,10 +57,10 @@ public class UrlControllerTest {
         final var request = "{\"url\": \"" + url + "\"}";
 
         final var mvcResult = mockMvc.perform(post("/shorten")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Invalid url");
@@ -72,10 +72,10 @@ public class UrlControllerTest {
         final var request = "{\"url\": \"" + url + "\"}";
 
         final var mvcResult = mockMvc.perform(post("/shorten")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getContentAsString()).contains("Invalid url");
@@ -87,10 +87,10 @@ public class UrlControllerTest {
         final var request = "{\"url\": \"" + url + "\"}";
 
         final var mvcPostResult = mockMvc.perform(post("/shorten")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
                 .andExpect(status().isCreated())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         final var mapper = new ObjectMapper();
@@ -99,7 +99,7 @@ public class UrlControllerTest {
 
         final var mvcResult = mockMvc.perform(get("/shorten/" + responseUrl.getShortUrl()))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         assertThat(mvcResult.getResponse().getContentAsString()).contains(url);
