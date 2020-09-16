@@ -18,10 +18,10 @@ public class AdviceController {
     }
 
     @ExceptionHandler(InvalidUrlException.class)
-    public ResponseEntity<ErrorResponse<Void>> handleInvalidUrlException(final InvalidUrlException exception) {
+    public ResponseEntity<ErrorResponse> handleInvalidUrlException(final InvalidUrlException exception) {
         log.error("m=handleInvalidUrlException", exception);
         return ResponseEntity.badRequest()
-                .body(new ErrorResponse<>("Invalid url"));
+                .body(new ErrorResponse("Invalid url"));
     }
 
 }

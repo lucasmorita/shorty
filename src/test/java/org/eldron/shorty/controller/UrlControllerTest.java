@@ -1,10 +1,8 @@
 package org.eldron.shorty.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eldron.shorty.config.EmbeddedRedisConfiguration;
 import org.eldron.shorty.vo.Url;
-import org.eldron.shorty.vo.response.ErrorResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
