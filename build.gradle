@@ -1,7 +1,9 @@
 plugins {
+	id 'java'
+	id 'jacoco'
+	id 'org.sonarqube' version '3.0'
 	id 'org.springframework.boot' version '2.3.3.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-	id 'java'
 }
 
 group = 'org.eldron'
@@ -37,3 +39,18 @@ dependencies {
 configurations {
 	all*.exclude module : 'spring-boot-starter-logging'
 }
+
+jacocoTestReport {
+	dependsOn test
+	reports { xml.enabled true }
+}
+
+sonarqube {
+	properties {
+		property "sonar.projectName", "shorty"
+		property "sonar.projectKey", "3ldr0n_shorty"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.organization", "3ldr0n"
+	}
+}
+

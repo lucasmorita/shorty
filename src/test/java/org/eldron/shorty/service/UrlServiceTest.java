@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,7 +60,7 @@ public class UrlServiceTest {
     }
 
     @Test
-    public void shortenUrl_validUrlThenSaveUrl() throws Exception {
+    public void shortenUrl_validUrlThenSaveUrl() {
         final var url = "http://www.google.com";
         when(restTemplate.getForObject(url, String.class))
                 .thenReturn("");
@@ -71,29 +71,29 @@ public class UrlServiceTest {
 
         assertThat(shortenedUrl).isNotNull();
         assertThat(shortenedUrl.getUrl()).isEqualTo(url);
-        assertThat(shortenedUrl.getShortUrl().length()).isEqualTo(10);
+        assertThat(shortenedUrl.getShortUrl()).hasSize(10);
     }
 
     @Test(expected = InvalidUrlException.class)
-    public void shortenUrl_invalidUrlThenSaveUrl() throws Exception {
+    public void shortenUrl_invalidUrlThenSaveUrl() {
         final var url = "www.google.com";
 
         urlService.shortenUrl(url);
 
-        verify(restTemplate, times(0)).getForObject(url, String.class);
-        verify(urlRepository, times(0)).save(any(UrlHash.class));
+        verify(restTemplate, never()).getForObject(url, String.class);
+        verify(urlRepository, never()).save(any(UrlHash.class));
     }
 
     @Test(expected = InvalidUrlException.class)
-    public void shortenUrl_invalidRestTemplateUrlThenSaveUrl() throws Exception {
+    public void shortenUrl_invalidRestTemplateUrlThenSaveUrl() {
         final var url = "http://www.google.com";
         when(restTemplate.getForObject(url, String.class))
                 .thenThrow(RestClientException.class);
 
         urlService.shortenUrl(url);
 
-        verify(restTemplate, times(1)).getForObject(url, String.class);
-        verify(urlRepository, times(0)).save(any(UrlHash.class));
+        verify(restTemplate).getForObject(url, String.class);
+        verify(urlRepository, never()).save(any(UrlHash.class));
     }
 
 }
