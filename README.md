@@ -4,6 +4,10 @@
 
 A simple URL shortener, built using Java 11 and Redis.
 
+## Architecture
+
+![Architecture](./docs/Architecture.png)
+
 ## Local environment
 
 To run shorty you must first build the project using the gradle
