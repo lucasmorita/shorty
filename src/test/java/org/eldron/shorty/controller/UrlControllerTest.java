@@ -3,13 +3,13 @@ package org.eldron.shorty.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eldron.shorty.config.EmbeddedRedisConfiguration;
 import org.eldron.shorty.vo.Url;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,16 +18,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = EmbeddedRedisConfiguration.class)
 @AutoConfigureMockMvc
-public class UrlControllerTest {
+class UrlControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    public void whenRequestUrlThatDoesntExist_thenReturnNotFound() throws Exception {
+    void whenRequestUrlThatDoesntExist_thenReturnNotFound() throws Exception {
         final var shortenedUrl = "abcd";
 
         mockMvc.perform(get("/shorten/" + shortenedUrl))
@@ -35,7 +35,7 @@ public class UrlControllerTest {
     }
 
     @Test
-    public void whenRequestToShortenUrl_thenReturnSavedUrl() throws Exception {
+    void whenRequestToShortenUrl_thenReturnSavedUrl() throws Exception {
         final var url = "http://www.google.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
@@ -50,7 +50,7 @@ public class UrlControllerTest {
     }
 
     @Test
-    public void whenRequestToShortenUrlWithoutProtocol_thenReturnUrl() throws Exception {
+    void whenRequestToShortenUrlWithoutProtocol_thenReturnUrl() throws Exception {
         final var url = "www.google.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
@@ -65,7 +65,7 @@ public class UrlControllerTest {
     }
 
     @Test
-    public void whenRequestToShortenWithUrlThatDoesntExist_thenReturnUrl() throws Exception {
+    void whenRequestToShortenWithUrlThatDoesntExist_thenReturnUrl() throws Exception {
         final var url = "http://www.completely-invalid-url.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
@@ -80,7 +80,7 @@ public class UrlControllerTest {
     }
 
     @Test
-    public void whenRequestUrlExists_thenReturnOriginalUrl() throws Exception {
+    void whenRequestUrlExists_thenReturnOriginalUrl() throws Exception {
         final var url = "http://www.google.com";
         final var request = "{\"url\": \"" + url + "\"}";
 
