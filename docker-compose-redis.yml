@@ -1,0 +1,9 @@
+version: "3.5"
+
+services:
+  redis:
+    domainname: redis.local.shorty
+    container_name: shorty_redis
+    image: redis
+    ports:
+      - 6379:6379

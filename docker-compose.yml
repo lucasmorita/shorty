@@ -1,7 +1,27 @@
 version: "3.5"
 
 services:
+  shorty:
+    domainname: shorty.local
+    container_name: shorty_app
+    build: .
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    ports:
+      - 8080:8080
+    networks:
+      - shortynet
+
   redis:
+    domainname: redis.local.shorty
+    container_name: shorty_redis
     image: redis
     ports:
-      - "6379:6379"
+      - 6379:6379
+    networks:
+      shortynet:
+        aliases:
+          - redis.local.shorty
+
+networks:
+  shortynet:

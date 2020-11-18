@@ -11,13 +11,19 @@ A simple URL shortener, built using Java 11 and Redis.
 ## Local environment
 
 To run shorty you must first build the project using the gradle
-wrapper, then run the docker-compose command to run redis.
+wrapper, then run the docker-compose command to run redis and build
+shorty docker image.
 
 ```bash
-./gradlew clean build test
-docker build -t shorty:version .
+./gradlew clean build
 docker-compose up -d
-docker run shorty:version
+```
+
+if you only want to run redis you run docker compose specifying the
+`docker-compose-redis.yml` file.
+
+```bash
+docker-compose -f docker-compose-redis.yml up -d
 ```
 
 **Note**: the project is configured to build using java 11, if you
