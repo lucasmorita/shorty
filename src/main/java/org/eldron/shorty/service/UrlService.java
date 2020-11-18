@@ -1,8 +1,6 @@
 package org.eldron.shorty.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.validator.routines.UrlValidator;
 import org.eldron.shorty.exception.InvalidUrlException;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.hash.UrlHash;
@@ -12,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.regex.Pattern;
+
 @Service
 public class UrlService {
+    private static final String REGEX_PATTERN = "(http|https)://.+";
     private final UrlRepository urlRepository;
     private final RestTemplate restTemplate;
 
@@ -64,9 +65,9 @@ public class UrlService {
     }
 
     private void validateUrl(final String url) {
-        final var schemes = new String[]{"http", "https"};
-        final var validator = new UrlValidator(schemes);
-        if (!validator.isValid(url)) {
+        final var pattern = Pattern.compile(REGEX_PATTERN);
+        final var matcher = pattern.matcher(url);
+        if (!matcher.find()) {
             throw new InvalidUrlException(url);
         }
 
