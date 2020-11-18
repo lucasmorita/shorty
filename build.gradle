@@ -1,9 +1,9 @@
 plugins {
-	id 'java'
-	id 'jacoco'
-	id 'org.sonarqube' version '3.0'
-	id 'org.springframework.boot' version '2.4.0'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'jacoco'
+    id 'org.sonarqube' version '3.0'
+    id 'org.springframework.boot' version '2.4.0'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
 group = 'org.eldron'
@@ -11,68 +11,73 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.commons:commons-lang3:3.11'
-	implementation 'commons-validator:commons-validator:1.7'
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
-	implementation 'io.springfox:springfox-swagger2:3.0.0'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.commons:commons-lang3:3.11'
+    implementation 'commons-validator:commons-validator:1.7'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core:3.6.0'
-	testImplementation 'org.assertj:assertj-core:3.18.1'
+    testImplementation 'org.assertj:assertj-core:3.18.1'
     testImplementation 'it.ozimov:embedded-redis:0.7.3'
-	testImplementation 'io.cucumber:cucumber-java:6.8.1'
-	testImplementation 'io.cucumber:cucumber-junit:6.8.1'
-	testImplementation 'io.cucumber:cucumber-spring:6.8.1'
-	testImplementation 'io.cucumber:cucumber-junit-platform-engine:6.8.1'
-	testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
+    testImplementation 'io.cucumber:cucumber-java:6.8.1'
+    testImplementation 'io.cucumber:cucumber-junit:6.8.1'
+    testImplementation 'io.cucumber:cucumber-spring:6.8.1'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:6.8.1'
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
 }
 
 configurations {
-	cucumberRuntime {
-		extendsFrom testImplementation
-	}
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
 }
 
 task cucumber() {
-	dependsOn assemble, testClasses
-	doLast {
-		javaexec {
-			main = "io.cucumber.core.cli.Main"
-			classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-			args = ['--plugin', 'pretty', '--glue', 'org.eldron.shorty.integration.step', 'src/test/resources']
-		}
-	}
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'org.eldron.shorty.integration.step', 'src/test/resources']
+        }
+    }
 }
 
 configurations {
-	all*.exclude module : 'spring-boot-starter-logging'
+    all*.exclude module: 'spring-boot-starter-logging'
 }
 
 jacocoTestReport {
-	dependsOn test
-	reports { xml.enabled true }
+    dependsOn test
+    reports {
+        xml.enabled true
+        xml.destination(file("$buildDir/jacoco/jacocoTest.exec"))
+    }
 }
 
 sonarqube {
-	properties {
-		property "sonar.projectName", "shorty"
-		property "sonar.projectKey", "3ldr0n_shorty"
-		property "sonar.host.url", "https://sonarcloud.io"
-		property "sonar.organization", "3ldr0n"
-	}
+    properties {
+        property "sonar.projectName", "shorty"
+        property "sonar.projectKey", "3ldr0n_shorty"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.organization", "3ldr0n"
+        property "sonar.exclusions", "**/*Configuration.java, ShortyApplication.java"
+        property "sonar.coverage.jacoco.xmlReportPaths", file("$buildDir/jacoco/jacocoTest.exec")
+    }
 }
 
