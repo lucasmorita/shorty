@@ -1,6 +1,2 @@
-spring:
-  redis:
-    host: localhost
-
 http:
   timeout: 5
