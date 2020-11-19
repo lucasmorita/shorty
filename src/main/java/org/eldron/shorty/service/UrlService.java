@@ -36,7 +36,7 @@ public class UrlService {
         if (url.isPresent()) {
             return Url.builder()
                     .shortUrl(url.get().getId())
-                    .url(url.get().getOriginalUrl())
+                    .originalUrl(url.get().getOriginalUrl())
                     .build();
         }
         throw new UrlNotFoundException();
@@ -60,7 +60,7 @@ public class UrlService {
 
         return Url.builder()
                 .shortUrl(urlHash.getId())
-                .url(urlHash.getOriginalUrl())
+                .originalUrl(urlHash.getOriginalUrl())
                 .build();
     }
 

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Url {
     private String shortUrl;
-    private String url;
+    private String originalUrl;
 }

@@ -24,7 +24,7 @@ public class UrlController {
     public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable("shortenedUrlId") final String shortenedUrlId) {
         final var url = urlService.getOriginalUrl(shortenedUrlId);
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header(HttpHeaders.LOCATION, url.getUrl())
+                .header(HttpHeaders.LOCATION, url.getOriginalUrl())
                 .build();
     }
 

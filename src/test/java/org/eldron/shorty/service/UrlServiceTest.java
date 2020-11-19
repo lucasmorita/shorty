@@ -47,8 +47,8 @@ class UrlServiceTest {
         final var url = urlService.getOriginalUrl(urlId);
 
         assertThat(url).isNotNull();
-        assertThat(url.getUrl()).isNotNull();
-        assertThat(url.getUrl()).isEqualTo(originalUrl);
+        assertThat(url.getOriginalUrl()).isNotNull();
+        assertThat(url.getOriginalUrl()).isEqualTo(originalUrl);
     }
 
     @Test
@@ -75,7 +75,7 @@ class UrlServiceTest {
         final var shortenedUrl = urlService.shortenUrl(url);
 
         assertThat(shortenedUrl).isNotNull();
-        assertThat(shortenedUrl.getUrl()).isEqualTo(url);
+        assertThat(shortenedUrl.getOriginalUrl()).isEqualTo(url);
         assertThat(shortenedUrl.getShortUrl()).hasSize(10);
     }
 
