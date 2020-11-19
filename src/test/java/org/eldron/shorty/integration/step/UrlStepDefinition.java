@@ -15,6 +15,7 @@ import org.eldron.shorty.vo.Url;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,7 +27,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -79,6 +82,11 @@ public class UrlStepDefinition {
         this.url = "localhost";
     }
 
+    @And("the url is registered")
+    public void theUrlIsRegistered() throws Exception {
+        shortenUrl();
+    }
+
     @When("a url shorten is requested")
     public void aUrlShortenIsRequested() throws Exception {
         shortenUrl();
@@ -87,6 +95,21 @@ public class UrlStepDefinition {
     @When("a url is requested")
     public void aUrlIsRequsted() throws Exception {
         this.mvcResult = findShortenedUrl("anyshorturl");
+    }
+
+    @When("a url redirect is requested")
+    public void aUrlRedirectIsRequested() throws Exception {
+        final String shortUrl;
+        if (nonNull(mvcResult)) {
+            final var mapper = new ObjectMapper();
+            final var response = mapper.readValue(mvcResult.getResponse().getContentAsString(), Url.class);
+            shortUrl = response.getShortUrl();
+        } else {
+            shortUrl = "not-registered.com";
+        }
+
+        this.mvcResult = mockMvc.perform(get("/" + shortUrl))
+                .andReturn();
     }
 
     @Then("the response was {word}")
@@ -106,6 +129,12 @@ public class UrlStepDefinition {
     @And("the url was not shortened")
     public void theUrlWasNotShortened() {
         assertThat(urlRepository.findAll()).isEmpty();
+    }
+
+    @And("the response header contains the original url")
+    public void theResponseHeaderContainsTheOriginalUrl() {
+        final var location = mvcResult.getResponse().getHeader(HttpHeaders.LOCATION);
+        assertThat(location).isEqualTo(url);
     }
 
     private void shortenUrl() throws Exception {
