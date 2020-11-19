@@ -9,6 +9,7 @@ addons:
 script:
 - ./gradlew clean --info --stacktrace
 - ./gradlew build test --info --stacktrace
+- ./gradlew cucumber --info --stacktrace
 - ./gradlew jacocoTestReport --info
 - ./gradlew sonarqube -Dsonar.login=$SHORTY_SONAR --info --stacktrace
 

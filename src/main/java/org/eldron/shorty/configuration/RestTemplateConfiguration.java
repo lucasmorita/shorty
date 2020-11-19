@@ -1,4 +1,4 @@
-package org.eldron.shorty.config;
+package org.eldron.shorty.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;

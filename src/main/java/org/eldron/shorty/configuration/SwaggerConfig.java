@@ -1,4 +1,4 @@
-package org.eldron.shorty.config;
+package org.eldron.shorty.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
