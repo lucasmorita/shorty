@@ -1,0 +1,6 @@
+spring:
+  redis:
+    url: ${REDIS_URL}
+
+server:
+  port: ${PORT}
