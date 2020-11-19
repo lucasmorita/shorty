@@ -1,0 +1,1 @@
+web: java -Dspring.profiles.active=heroku -jar build/libs/shorty-1.0.jar
