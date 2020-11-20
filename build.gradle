@@ -54,6 +54,8 @@ task cucumber() {
             main = "io.cucumber.core.cli.Main"
             classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
             args = ['--plugin', 'pretty', '--glue', 'org.eldron.shorty.integration.step', 'src/test/resources']
+            def jacocoAgent = zipTree(configurations.jacocoAgent.singleFile).filter { it.name == "jacocoagent.jar" }.singleFile
+            jvmArgs = ["-javaagent:$jacocoAgent=destfile=$buildDir/results/jacoco/cucumber.exec,append=false"]
         }
     }
 }
@@ -62,11 +64,14 @@ configurations {
     all*.exclude module: 'spring-boot-starter-logging'
 }
 
+test {
+    useJUnitPlatform()
+}
+
 jacocoTestReport {
-    dependsOn test
+    executionData(files("$buildDir/jacoco/test.exec", "$buildDir/results/jacoco/cucumber.exec"))
     reports {
         xml.enabled true
-        xml.destination(file("$buildDir/jacoco/jacocoTest.exec"))
     }
 }
 
@@ -76,8 +81,7 @@ sonarqube {
         property "sonar.projectKey", "3ldr0n_shorty"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.organization", "3ldr0n"
-        property "sonar.exclusions", "**/*Configuration.java, ShortyApplication.java"
-        property "sonar.coverage.jacoco.xmlReportPaths", file("$buildDir/jacoco/jacocoTest.exec")
+        property "sonar.exclusions", "**/*Configuration.java, **/ShortyApplication.java"
     }
 }
 
