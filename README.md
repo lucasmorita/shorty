@@ -1,6 +1,7 @@
 # shorty
 
 [![Build Status](https://travis-ci.com/eaneto/shorty.svg?branch=master)](https://travis-ci.com/eaneto/shorty)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=3ldr0n_shorty&metric=alert_status)](https://sonarcloud.io/dashboard/index/3ldr0n_shorty)
 
 A simple URL shortener, built using Java 11 and Redis.
 
@@ -37,7 +38,7 @@ need to run in an older version you'll need to adapt some parts of the code.
 POST /shorten
 ```
 
-#### Payload example
+#### Request payload example
 
 ```json
 {
