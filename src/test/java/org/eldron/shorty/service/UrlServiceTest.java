@@ -76,7 +76,7 @@ class UrlServiceTest {
 
         assertThat(shortenedUrl).isNotNull();
         assertThat(shortenedUrl.getOriginalUrl()).isEqualTo(url);
-        assertThat(shortenedUrl.getShortUrl()).hasSize(10);
+        assertThat(shortenedUrl.getShortenedUrl()).hasSize(10);
     }
 
     @Test

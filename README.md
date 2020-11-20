@@ -46,7 +46,31 @@ POST /shorten
 }
 ```
 
-### Get original url from shortened
+```bash
+curl -X POST http://shorty.example/shorten \
+    -H 'Content-Type: application/json' \
+    -d'{"url": "www.github.com/eaneto/shorty"}'
 ```
+
+#### Response payload example
+
+```json
+{
+  "original_url": "www.github.com/eaneto/shorty",
+  "shortened_url": "asd1a9SJs1"
+}
+```
+
+### Get original url from shortened
+
+```bash
 GET /shorten/{shortenedUrl}
+curl http://shorty.example/shorten/asd1a9SJs1
+```
+
+### Redirect to original url
+
+```bash
+GET /{shortenedUrl}
+curl http://shorty.example/asd1a9SJs1
 ```

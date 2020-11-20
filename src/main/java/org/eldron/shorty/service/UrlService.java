@@ -35,7 +35,7 @@ public class UrlService {
 
         if (url.isPresent()) {
             return Url.builder()
-                    .shortUrl(url.get().getId())
+                    .shortenedUrl(url.get().getId())
                     .originalUrl(url.get().getOriginalUrl())
                     .build();
         }
@@ -59,7 +59,7 @@ public class UrlService {
         urlRepository.save(urlHash);
 
         return Url.builder()
-                .shortUrl(urlHash.getId())
+                .shortenedUrl(urlHash.getId())
                 .originalUrl(urlHash.getOriginalUrl())
                 .build();
     }

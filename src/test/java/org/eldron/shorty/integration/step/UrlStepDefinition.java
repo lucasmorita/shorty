@@ -29,7 +29,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static java.util.Objects.nonNull;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -103,7 +102,7 @@ public class UrlStepDefinition {
         if (nonNull(mvcResult)) {
             final var mapper = new ObjectMapper();
             final var response = mapper.readValue(mvcResult.getResponse().getContentAsString(), Url.class);
-            shortUrl = response.getShortUrl();
+            shortUrl = response.getShortenedUrl();
         } else {
             shortUrl = "not-registered.com";
         }
@@ -122,7 +121,7 @@ public class UrlStepDefinition {
     public void theUrlWasShortened() throws Exception {
         final var mapper = new ObjectMapper();
         final var response = mapper.readValue(mvcResult.getResponse().getContentAsString(), Url.class);
-        final var result = findShortenedUrl(response.getShortUrl());
+        final var result = findShortenedUrl(response.getShortenedUrl());
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
