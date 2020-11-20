@@ -56,3 +56,5 @@ out/
 .vscode/
 
 gradle.properties
+
+!newrelic/newrelic.jar
