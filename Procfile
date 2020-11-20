@@ -1,1 +1,1 @@
-web: java -Dspring.profiles.active=heroku -javaagent:/app/newrelic/newrelic.jar -jar build/libs/shorty-1.0.jar
+web: java -javaagent:/app/newrelic/newrelic.jar -Dspring.profiles.active=heroku -jar build/libs/shorty-1.0.jar
