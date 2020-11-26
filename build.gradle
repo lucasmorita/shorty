@@ -32,7 +32,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.mockito:mockito-core:3.6.0'
+    testImplementation 'org.mockito:mockito-core:3.6.28'
     testImplementation 'org.assertj:assertj-core:3.18.1'
     testImplementation 'it.ozimov:embedded-redis:0.7.3'
     testImplementation 'io.cucumber:cucumber-junit:6.9.0'
