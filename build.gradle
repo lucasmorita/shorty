@@ -35,7 +35,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:3.6.28'
     testImplementation 'org.assertj:assertj-core:3.18.1'
     testImplementation 'it.ozimov:embedded-redis:0.7.3'
-    testImplementation 'io.cucumber:cucumber-junit:6.9.0'
+    testImplementation 'io.cucumber:cucumber-junit:6.9.1'
     testImplementation 'io.cucumber:cucumber-java:6.9.1'
     testImplementation 'io.cucumber:cucumber-spring:6.9.1'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:6.9.0'
