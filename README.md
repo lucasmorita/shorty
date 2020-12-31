@@ -1,7 +1,6 @@
-# shorty
+# Shorty
 
-[![Build Status](https://travis-ci.com/eaneto/shorty.svg?branch=master)](https://travis-ci.com/eaneto/shorty)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=3ldr0n_shorty&metric=alert_status)](https://sonarcloud.io/dashboard/index/3ldr0n_shorty)
+[![codecov](https://codecov.io/gh/eaneto/shorty/branch/master/graph/badge.svg)](https://codecov.io/gh/eaneto/shorty)
 
 A simple URL shortener, built using Java 11 and Redis.
 
