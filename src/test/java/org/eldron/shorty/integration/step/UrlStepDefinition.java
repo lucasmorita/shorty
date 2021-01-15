@@ -1,6 +1,7 @@
 package org.eldron.shorty.integration.step;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
@@ -48,9 +49,11 @@ public class UrlStepDefinition {
 
     private MvcResult mvcResult;
     private String url;
+    final ObjectMapper mapper = new ObjectMapper();
 
     @Before
     public void setUp() {
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
         wireMockServer = new WireMockServer(options().dynamicPort());
         wireMockServer.start();
         urlRepository.deleteAll();
@@ -100,7 +103,6 @@ public class UrlStepDefinition {
     public void aUrlRedirectIsRequested() throws Exception {
         final String shortUrl;
         if (nonNull(mvcResult)) {
-            final var mapper = new ObjectMapper();
             final var response = mapper.readValue(mvcResult.getResponse().getContentAsString(), Url.class);
             shortUrl = response.getShortenedUrl();
         } else {
@@ -119,7 +121,6 @@ public class UrlStepDefinition {
 
     @And("the url was shortened")
     public void theUrlWasShortened() throws Exception {
-        final var mapper = new ObjectMapper();
         final var response = mapper.readValue(mvcResult.getResponse().getContentAsString(), Url.class);
         final var result = findShortenedUrl(response.getShortenedUrl());
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());

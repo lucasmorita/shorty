@@ -1,2 +1,6 @@
 http:
   timeout: 5
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
