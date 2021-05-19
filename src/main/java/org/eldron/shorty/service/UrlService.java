@@ -64,6 +64,24 @@ public class UrlService {
                 .build();
     }
 
+
+    public Url shortedCustomUrl(final String requestedUrl, final String customUrl) {
+        validateUrl(requestedUrl);
+
+        final var urlHash = UrlHash.builder()
+                .id(customUrl)
+                .originalUrl(requestedUrl)
+                .build();
+
+        urlRepository.save(urlHash);
+
+        return Url.builder()
+                .shortenedUrl(urlHash.getId())
+                .originalUrl(urlHash.getOriginalUrl())
+                .build();
+    }
+
+
     private void validateUrl(final String url) {
         final var pattern = Pattern.compile(REGEX_PATTERN);
         final var matcher = pattern.matcher(url);
