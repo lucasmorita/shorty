@@ -2,6 +2,7 @@ package org.eldron.shorty.controller;
 
 import org.eldron.shorty.service.UrlService;
 import org.eldron.shorty.vo.Url;
+import org.eldron.shorty.vo.request.ShortenCustomUrlRequest;
 import org.eldron.shorty.vo.request.ShortenUrlRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,4 +40,13 @@ public class UrlController {
         final var shortenedUrl = urlService.shortenUrl(shortenUrlRequest.getUrl());
         return ResponseEntity.status(HttpStatus.CREATED).body(shortenedUrl);
     }
+
+    @PostMapping("/shorten/custom")
+    public ResponseEntity<Url> shortenCustomUrl(@RequestBody final ShortenCustomUrlRequest shortenCustomUrlRequest){
+        final var customShortnedUrl  = urlService.shortedCustomUrl(shortenCustomUrlRequest.getUrlRequested(),
+                                                                         shortenCustomUrlRequest.getCustomUrl());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(customShortnedUrl);
+    }
 }
+
