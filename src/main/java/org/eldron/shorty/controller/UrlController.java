@@ -43,9 +43,10 @@ public class UrlController {
 
     @PostMapping("/shorten/custom")
     public ResponseEntity<Url> shortenCustomUrl(@RequestBody final ShortenCustomUrlRequest shortenCustomUrlRequest){
-        final var customShortnedUrl  = urlService.shortedCustomUrl(shortenCustomUrlRequest.getUrlRequested(),
-                                                                         shortenCustomUrlRequest.getCustomUrl());
-
+    System.out.println(shortenCustomUrlRequest.getCustom());
+    System.out.println(shortenCustomUrlRequest.getUrl());
+        final var customShortnedUrl  = urlService.shortedCustomUrl(shortenCustomUrlRequest.getUrl(),
+                                                                         shortenCustomUrlRequest.getCustom());
         return ResponseEntity.status(HttpStatus.CREATED).body(customShortnedUrl);
     }
 }

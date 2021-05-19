@@ -64,7 +64,12 @@ public class UrlService {
                 .build();
     }
 
-
+    /**
+     *
+     * @param requestedUrl the original url to save
+     * @param customUrl the new url th
+     * @return
+     */
     public Url shortedCustomUrl(final String requestedUrl, final String customUrl) {
         validateUrl(requestedUrl);
 

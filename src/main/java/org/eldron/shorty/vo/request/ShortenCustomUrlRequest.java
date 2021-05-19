@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ShortenCustomUrlRequest {
 
-    private String urlRequested;
-    private String customUrl;
+    private String url;
+    private String custom;
+
 }
