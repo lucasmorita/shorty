@@ -10,6 +10,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.integration.configuration.EmbeddedRedisConfiguration;
 import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.vo.Url;
@@ -51,6 +52,8 @@ public class UrlStepDefinition {
     private String url;
     final ObjectMapper mapper = new ObjectMapper();
 
+    private final String customUrl = "customurl";
+
     @Before
     public void setUp() {
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
@@ -69,6 +72,22 @@ public class UrlStepDefinition {
         configureMockEndpoint(HttpStatus.OK);
     }
 
+    @When("a custom url shorten is requested")
+    public void aCustomUrlShortenIsRequested() throws Exception {
+        shortenCustomUrl();
+    }
+
+    @And("custom url already exists in database")
+    public void customUrlAlreadyExistsInDatabase() {
+        urlRepository.save(new UrlHash(this.customUrl, this.url));
+    }
+
+    @And("custom url is unique")
+    public void customUrlIsUnique() {
+        assertThat(urlRepository.findAll())
+                .hasSize(1);
+    }
+
     @Given("an invalid url")
     public void anInvalidUrl() {
         this.url = "invalid-url";
@@ -80,7 +99,7 @@ public class UrlStepDefinition {
     }
 
     @Given("a url without protocol")
-    public void aUrlWithouProtocol() {
+    public void aUrlWithoutProtocol() {
         this.url = "localhost";
     }
 
@@ -95,7 +114,7 @@ public class UrlStepDefinition {
     }
 
     @When("a url is requested")
-    public void aUrlIsRequsted() throws Exception {
+    public void aUrlIsRequested() throws Exception {
         this.mvcResult = findShortenedUrl("anyshorturl");
     }
 
@@ -143,6 +162,16 @@ public class UrlStepDefinition {
         this.mvcResult = mockMvc.perform(post("/shorten")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(request))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+    }
+
+    private void shortenCustomUrl() throws Exception {
+
+        final var customUrlRequest = String.format("{ \"url\": \"%s\", \"custom\": \"%s\" }", this.url, this.customUrl);
+        this.mvcResult = mockMvc.perform(post("/shorten/custom")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(customUrlRequest))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
     }
