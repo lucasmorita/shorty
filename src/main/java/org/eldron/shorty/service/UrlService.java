@@ -1,6 +1,7 @@
 package org.eldron.shorty.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.eldron.shorty.exception.CustomUrlAlreadyExistsException;
 import org.eldron.shorty.exception.InvalidUrlException;
 import org.eldron.shorty.exception.UrlNotFoundException;
 import org.eldron.shorty.hash.UrlHash;
@@ -46,13 +47,14 @@ public class UrlService {
      * Saves a new url.
      *
      * @param url the original url to save.
+     * @param customUrl The customized url that substitutes a random one.
      * @return the vo of the url
      */
-    public Url shortenUrl(final String url) {
+    public Url shortenUrl(final String url, final String customUrl) {
         validateUrl(url);
 
         final var urlHash = UrlHash.builder()
-                .id(urlIdGenerator())
+                .id(customUrl == null ? urlIdGenerator() : customUrl)
                 .originalUrl(url)
                 .build();
 
@@ -64,28 +66,17 @@ public class UrlService {
                 .build();
     }
 
-    /**
-     *
-     * @param requestedUrl the original url to save
-     * @param customUrl the new url th
-     * @return
-     */
-    public Url shortedCustomUrl(final String requestedUrl, final String customUrl) {
-        validateUrl(requestedUrl);
 
-        final var urlHash = UrlHash.builder()
-                .id(customUrl)
-                .originalUrl(requestedUrl)
-                .build();
-
-        urlRepository.save(urlHash);
-
-        return Url.builder()
-                .shortenedUrl(urlHash.getId())
-                .originalUrl(urlHash.getOriginalUrl())
-                .build();
+    public Url shortenUrl(final String url) {
+        return shortenUrl(url, null);
     }
 
+    public void validateCustomUrl(final String custom) {
+        final var urlHash = urlRepository.findById(custom);
+        urlHash.ifPresent(url -> {
+            throw new CustomUrlAlreadyExistsException(url.getId());
+        });
+    }
 
     private void validateUrl(final String url) {
         final var pattern = Pattern.compile(REGEX_PATTERN);
@@ -104,5 +95,4 @@ public class UrlService {
     private String urlIdGenerator() {
         return RandomStringUtils.randomAlphanumeric(10);
     }
-
 }
