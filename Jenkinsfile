@@ -10,7 +10,6 @@ node("java11") {
 
     try {
         def gradle = "./gradlew"
-        def release = new ProjectRelease(this)
 
         stage(name: "build") {
             // skip test for now
