@@ -65,6 +65,8 @@ configurations {
 }
 
 test {
+    maxHeapSize = "512m"
+    jvmArgs = "-XX:MaxMetaspaceSize=128m"
     useJUnitPlatform()
 }
 
