@@ -1,10 +1,10 @@
 package org.eldron.shorty.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.eldron.shorty.entity.UrlEntity;
 import org.eldron.shorty.exception.CustomUrlAlreadyExistsException;
 import org.eldron.shorty.exception.InvalidUrlException;
 import org.eldron.shorty.exception.UrlNotFoundException;
-import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.vo.Url;
 import org.springframework.stereotype.Service;
@@ -32,11 +32,11 @@ public class UrlService {
      * @throws UrlNotFoundException if the shortened url doesn't exist
      */
     public Url getOriginalUrl(final String shortenedUrlId) {
-        final var url = urlRepository.findById(shortenedUrlId);
+        final var url = urlRepository.findByShortenedUrl(shortenedUrlId);
 
         if (url.isPresent()) {
             return Url.builder()
-                    .shortenedUrl(url.get().getId())
+                    .shortenedUrl(url.get().getShortenedUrl())
                     .originalUrl(url.get().getOriginalUrl())
                     .build();
         }
@@ -53,16 +53,16 @@ public class UrlService {
     public Url shortenUrl(final String url, final String customUrl) {
         validateUrl(url);
 
-        final var urlHash = UrlHash.builder()
-                .id(customUrl == null ? urlIdGenerator() : customUrl)
+        final var urlEntity = UrlEntity.builder()
+                .shortenedUrl(customUrl == null ? urlIdGenerator() : customUrl)
                 .originalUrl(url)
                 .build();
 
-        urlRepository.save(urlHash);
+        urlRepository.save(urlEntity);
 
         return Url.builder()
-                .shortenedUrl(urlHash.getId())
-                .originalUrl(urlHash.getOriginalUrl())
+                .shortenedUrl(urlEntity.getShortenedUrl())
+                .originalUrl(urlEntity.getOriginalUrl())
                 .build();
     }
 
@@ -72,9 +72,9 @@ public class UrlService {
     }
 
     public void validateCustomUrl(final String custom) {
-        final var urlHash = urlRepository.findById(custom);
-        urlHash.ifPresent(url -> {
-            throw new CustomUrlAlreadyExistsException(url.getId());
+        final var urlHash = urlRepository.findByShortenedUrl(custom);
+        urlHash.ifPresent(urlEntity -> {
+            throw new CustomUrlAlreadyExistsException(urlEntity.getShortenedUrl());
         });
     }
 

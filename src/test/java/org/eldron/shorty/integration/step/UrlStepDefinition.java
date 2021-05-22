@@ -10,8 +10,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import org.eldron.shorty.hash.UrlHash;
-import org.eldron.shorty.integration.configuration.EmbeddedRedisConfiguration;
+import org.eldron.shorty.entity.UrlEntity;
 import org.eldron.shorty.repository.UrlRepository;
 import org.eldron.shorty.vo.Url;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @ActiveProfiles("test")
-@SpringBootTest(classes = EmbeddedRedisConfiguration.class)
+@SpringBootTest
 @AutoConfigureMockMvc
 @CucumberContextConfiguration
 public class UrlStepDefinition {
@@ -79,7 +78,7 @@ public class UrlStepDefinition {
 
     @And("custom url already exists in database")
     public void customUrlAlreadyExistsInDatabase() {
-        urlRepository.save(new UrlHash(this.customUrl, this.url));
+        urlRepository.save(new UrlEntity(this.customUrl, this.url));
     }
 
     @And("custom url is unique")
@@ -140,7 +139,7 @@ public class UrlStepDefinition {
 
     @And("the url was shortened")
     public void theUrlWasShortened() throws Exception {
-        final var response = mapper.readValue(mvcResult.getResponse().getContentAsString(), Url.class);
+        final var response = mapper.readValue(mvcResult.getResponse().getContentAsString(), org.eldron.shorty.vo.Url.class);
         final var result = findShortenedUrl(response.getShortenedUrl());
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
     }
