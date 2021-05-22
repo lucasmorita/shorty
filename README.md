@@ -2,7 +2,7 @@
 
 [![codecov](https://codecov.io/gh/eaneto/shorty/branch/master/graph/badge.svg)](https://codecov.io/gh/eaneto/shorty)
 
-A simple URL shortener, built using Java 11 and Redis.
+A simple URL shortener, built using Java 11 and Postgres.
 
 ## Architecture
 
@@ -23,7 +23,7 @@ if you only want to run redis you run docker compose specifying the
 `docker-compose-redis.yml` file.
 
 ```bash
-docker-compose -f docker-compose-redis.yml up -d
+docker-compose -f docker-compose-postgres.yml up -d
 ```
 
 **Note**: the project is configured to build using java 11, if you
@@ -31,7 +31,7 @@ need to run in an older version you'll need to adapt some parts of the code.
 
 ## Endpoints
 
-### Shorten url
+### Shorten urlEntity
 
 ```
 POST /shorten
@@ -41,14 +41,14 @@ POST /shorten
 
 ```json
 {
-  "url": "www.github.com/eaneto/shorty"
+  "urlEntity": "www.github.com/eaneto/shorty"
 }
 ```
 
 ```bash
 curl -X POST http://shorty.example/shorten \
     -H 'Content-Type: application/json' \
-    -d'{"url": "www.github.com/eaneto/shorty"}'
+    -d'{"urlEntity": "www.github.com/eaneto/shorty"}'
 ```
 
 #### Response payload example
@@ -60,14 +60,14 @@ curl -X POST http://shorty.example/shorten \
 }
 ```
 
-### Get original url from shortened
+### Get original urlEntity from shortened
 
 ```bash
 GET /shorten/{shortenedUrl}
 curl http://shorty.example/shorten/asd1a9SJs1
 ```
 
-### Redirect to original url
+### Redirect to original urlEntity
 
 ```bash
 GET /{shortenedUrl}
