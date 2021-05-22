@@ -12,16 +12,19 @@ services:
     networks:
       - shortynet
 
-  redis:
-    domainname: redis.local.shorty
-    container_name: shorty_redis
-    image: redis
+  postgres:
+    domainname: postgres.local.shorty
+    container_name: shorty_postgres
+    image: postgres:13.3-alpine
     ports:
-      - 6379:6379
+      - 5432:5432
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: admin
     networks:
       shortynet:
         aliases:
-          - redis.local.shorty
+          - postgres.local.shorty
 
 networks:
   shortynet:
