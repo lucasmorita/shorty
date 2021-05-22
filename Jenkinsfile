@@ -2,16 +2,20 @@
 
 pipeline {
     agent any
-
+    sh "pwd"
     def gradle = './gradlew'
 
     stages {
         stage('Build') {
-            echo 'Building...'
-            sh "${gradle} clean build -x test"
+            steps {
+                echo 'Building...'
+                sh "${gradle} clean build -x test"
+            }
         }
         stage(name: "test") {
-            sh "${gradle} test"
+            steps {
+                sh "${gradle} test"
+            }
         }
     }
 }
