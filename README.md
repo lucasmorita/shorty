@@ -2,7 +2,7 @@
 
 [![codecov](https://codecov.io/gh/eaneto/shorty/branch/master/graph/badge.svg)](https://codecov.io/gh/eaneto/shorty)
 
-A simple URL shortener, built using Java 11 and Postgres.
+A simple URL shortener, built using Java 11 and Mysql.
 
 ## Architecture
 
