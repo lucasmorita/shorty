@@ -1,8 +1,8 @@
 package org.eldron.shorty.service;
 
+import org.eldron.shorty.entity.UrlEntity;
 import org.eldron.shorty.exception.InvalidUrlException;
 import org.eldron.shorty.exception.UrlNotFoundException;
-import org.eldron.shorty.hash.UrlHash;
 import org.eldron.shorty.repository.UrlRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,15 +36,15 @@ class UrlServiceTest {
 
     @Test
     void whenUrlExists_thenGetOriginalUrl() throws UrlNotFoundException {
-        final var urlId = "urlid";
+        final var customUrl = "customUrl";
         final var originalUrl = "www.google.com";
-        when(urlRepository.findById(urlId))
-                .thenReturn(Optional.of(UrlHash.builder()
-                        .id(urlId)
+        when(urlRepository.findByShortenedUrl(customUrl))
+                .thenReturn(Optional.of(UrlEntity.builder()
+                        .shortenedUrl(customUrl)
                         .originalUrl(originalUrl)
                         .build()));
 
-        final var url = urlService.getOriginalUrl(urlId);
+        final var url = urlService.getOriginalUrl(customUrl);
 
         assertThat(url).isNotNull();
         assertThat(url.getOriginalUrl()).isNotNull();
@@ -54,14 +54,14 @@ class UrlServiceTest {
     @Test
     void whenUrlDoesntExist_thenThrowException() throws UrlNotFoundException {
         final var urlId = "urlid";
-        when(urlRepository.findById(urlId))
+        when(urlRepository.findByShortenedUrl(urlId))
                 .thenReturn(Optional.empty());
 
         assertThatExceptionOfType(UrlNotFoundException.class).isThrownBy(() ->
                 urlService.getOriginalUrl(urlId)
         );
 
-        verify(urlRepository).findById(urlId);
+        verify(urlRepository).findByShortenedUrl(urlId);
     }
 
     @Test
@@ -69,8 +69,8 @@ class UrlServiceTest {
         final var url = "http://www.google.com";
         when(restTemplate.getForObject(url, String.class))
                 .thenReturn("");
-        when(urlRepository.save(any(UrlHash.class)))
-                .thenReturn(eq(any(UrlHash.class)));
+        when(urlRepository.save(any(UrlEntity.class)))
+                .thenReturn(eq(any(UrlEntity.class)));
 
         final var shortenedUrl = urlService.shortenUrl(url);
 
@@ -88,7 +88,7 @@ class UrlServiceTest {
         );
 
         verify(restTemplate, never()).getForObject(url, String.class);
-        verify(urlRepository, never()).save(any(UrlHash.class));
+        verify(urlRepository, never()).save(any(UrlEntity.class));
     }
 
     @Test
@@ -102,7 +102,7 @@ class UrlServiceTest {
         );
 
         verify(restTemplate).getForObject(url, String.class);
-        verify(urlRepository, never()).save(any(UrlHash.class));
+        verify(urlRepository, never()).save(any(UrlEntity.class));
     }
 
 }
