@@ -12,19 +12,19 @@ services:
     networks:
       - shortynet
 
-  postgres:
-    domainname: postgres.local.shorty
-    container_name: shorty_postgres
-    image: postgres:13.3-alpine
-    ports:
-      - 5432:5432
+  mysql:
+    domainname: mysql.local.shorty
+    container_name: shorty_mysql
+    image: mysql:8.0.25
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: shorty
     networks:
       shortynet:
         aliases:
-          - postgres.local.shorty
+          - mysql.local.shorty
 
 networks:
   shortynet:

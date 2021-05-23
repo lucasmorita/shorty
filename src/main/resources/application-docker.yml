@@ -1,11 +1,12 @@
 spring:
   datasource:
-    username: postgres
+    username: admin
     password: admin
-    url: jdbc:postgresql://postgres.local.shorty:5432/postgres
+    url: jdbc:mysql://mysql.local.shorty:3306/shorty
+    driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: create-drop

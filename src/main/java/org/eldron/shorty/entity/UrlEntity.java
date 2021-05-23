@@ -19,8 +19,11 @@ public class UrlEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
+    @Column(name = "SHORTENED_URL")
     private String shortenedUrl;
+    @Column(name = "ORIGINAL_URL")
     private String originalUrl;
 
     public UrlEntity(String shortenedUrl, String originalUrl) {

@@ -1,9 +1,0 @@
-version: "3.5"
-
-services:
-  postgres:
-    domainname: postgres.local.shorty
-    container_name: shorty_postgres
-    image: postgres:13.3-alpine
-    ports:
-      - 5432:5432

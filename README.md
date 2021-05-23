@@ -23,7 +23,7 @@ if you only want to run redis you run docker compose specifying the
 `docker-compose-redis.yml` file.
 
 ```bash
-docker-compose -f docker-compose-postgres.yml up -d
+docker-compose -f docker-compose-mysql.yml up -d
 ```
 
 **Note**: the project is configured to build using java 11, if you
