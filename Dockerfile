@@ -1,10 +1,11 @@
-FROM openjdk:11-jre
-
-RUN mkdir /shorty
-
-COPY ./build/libs/*.jar /shorty/app.jar
+FROM gradle:6.9.0-jdk11
 
 WORKDIR /shorty
+
+COPY . /shorty
+
+RUN gradle build
+RUN mv ./build/libs/*.jar ./app.jar
 
 EXPOSE 8080
 

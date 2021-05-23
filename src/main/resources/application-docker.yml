@@ -2,11 +2,11 @@ spring:
   datasource:
     username: admin
     password: admin
-    url: jdbc:mysql://mysql.local.shorty:3306/shorty
+    url: jdbc:mysql://mysql.prod.shorty:3306/shorty
     driverClassName: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
