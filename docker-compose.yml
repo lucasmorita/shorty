@@ -2,29 +2,71 @@ version: "3.5"
 
 services:
   shorty:
-    domainname: shorty.local
+    domainname: shorty.prod
     container_name: shorty_app
-    build: .
-    environment:
+    environment: 
       - SPRING_PROFILES_ACTIVE=docker
-    ports:
+    build:
+      context: ./shorty
+    restart: always
+    ports: 
       - 8080:8080
     networks:
-      - shortynet
-
-  mysql:
-    domainname: mysql.local.shorty
+      shortynet:
+        ipv4_address: 172.25.0.10
+        aliases: 
+          - shorty.prod
+  
+  database:
+    domainname: mysql.prod.shorty
     container_name: shorty_mysql
-    image: mysql:8.0.25
+    image: mysql
+    ports:
+      - 3306:3306
     environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: admin
-      MYSQL_DATABASE: shorty
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_PASSWORD=admin
+      - MYSQL_USER=admin
+      - MYSQL_DATABASE=shorty
     networks:
       shortynet:
+        ipv4_address: 172.25.0.11
         aliases:
-          - mysql.local.shorty
+          - mysql.prod.shorty
 
+  jenkins:
+    domainname: jenkins.shorty
+    container_name: shorty_jenkins
+    image: jenkins/jenkins:jdk11
+    ports:
+      - 8070:8080
+    networks:
+      shortynet:
+        ipv4_address: 172.25.0.12
+        aliases:
+          - jenkins.shorty
+  
+  monitor:
+    domainname: nagios.shorty
+    container_name: shorty_nagios
+    build:
+      context: ./nagios
+    depends_on:
+      - database
+      - shorty
+    volumes:
+      - ./nagios/shorty_nagios.cfg:/opt/nagios/etc/conf.d/shorty_nagios.cfg
+    ports:
+      - 8090:80
+    networks:
+      shortynet:
+        ipv4_address: 172.25.0.13
+        aliases:
+          - nagios.shorty
+  
 networks:
   shortynet:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
