@@ -58,3 +58,5 @@ out/
 gradle.properties
 
 !newrelic/newrelic.jar
+
+jenkins_home/*
