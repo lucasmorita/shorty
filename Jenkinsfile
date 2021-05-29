@@ -15,5 +15,15 @@ pipeline {
                 sh "./gradlew test --fail-fast"
             }
         }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == "master") {
+                        sh "./publish.sh"
+                    }
+                }
+            }
+        }
     }
 }
