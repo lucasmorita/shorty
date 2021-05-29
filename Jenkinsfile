@@ -20,6 +20,7 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == "master") {
+                        sh "chmod +x publish.sh"
                         sh "./publish.sh"
                     }
                 }
