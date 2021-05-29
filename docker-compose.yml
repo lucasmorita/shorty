@@ -39,7 +39,7 @@ services:
     container_name: shorty_jenkins
     image: jenkins/jenkins:jdk11
     volumes:
-      - ./jenkins_home:/var/jenkins_home
+      - ./jenkins_home:/var/jenkins_home:ro
     ports:
       - 8070:8080
     networks:
