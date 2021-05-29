@@ -18,8 +18,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                if (env.BRANCH_NAME == "master") {
-                    sh "./publish.sh"
+                script {
+                    if (env.BRANCH_NAME == "master") {
+                        sh "./publish.sh"
+                    }
                 }
             }
         }
