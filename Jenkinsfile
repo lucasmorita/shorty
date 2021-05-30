@@ -22,7 +22,8 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == "master") {
                         sh "chmod +x publish.sh"
-                        sh "./publish.sh"
+                        sh "sh ./publish.sh"
+                        sh "echo \$?"
                     }
                 }
             }
