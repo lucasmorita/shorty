@@ -1,6 +1,5 @@
 #!groovy
 
-
 pipeline {
     agent { label 'docker'}
 
@@ -21,13 +20,15 @@ pipeline {
             steps {
                 script {
                     if (env.BRANCH_NAME == "master") {
-                        sh "chmod +x publish.sh"
-                        sh "sh ./publish.sh"
-                        sh "echo \$?"
+                        sh '''
+                        echo "Deploying..."
+                        docker-compose stop shorty 
+                        docker-compose rm -f shorty
+                        docker-compose up --build -d
+                        '''
                     }
                 }
             }
         }
     }
 }
-
