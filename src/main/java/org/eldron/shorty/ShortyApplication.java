@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ShortyApplication {
 
     public static void main(String[] args) {
+        System.out.println("Iniciando");
         SpringApplication.run(ShortyApplication.class, args);
     }
 
