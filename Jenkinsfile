@@ -1,7 +1,8 @@
 #!groovy
 
+
 pipeline {
-    agent any
+    agent { label 'builder'}
 
     stages {
         stage('Build') {
@@ -28,3 +29,4 @@ pipeline {
         }
     }
 }
+
