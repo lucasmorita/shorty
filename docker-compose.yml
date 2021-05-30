@@ -33,20 +33,6 @@ services:
         ipv4_address: 172.25.0.11
         aliases:
           - mysql.prod.shorty
-          
-  jenkins:
-    domainname: jenkins.shorty
-    image: jenkins/jenkins:jdk11
-    container_name: shorty_jenkins
-    volumes:
-      - ./jenkins_home:/var/jenkins_home
-    ports:
-      - 8070:8080
-    networks:
-      shortynet:
-        ipv4_address: 172.25.0.12
-        aliases:
-          - jenkins.shorty
   
   monitor:
     domainname: nagios.shorty
