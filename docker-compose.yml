@@ -35,12 +35,11 @@ services:
           - mysql.prod.shorty
           
   jenkins:
-    build:
-      context: ./jenkins
     domainname: jenkins.shorty
+    image: jenkins/jenkins:jdk11
     container_name: shorty_jenkins
     volumes:
-      - ./jenkins_home:/var/jenkins_home:ro
+      - ./jenkins_home:/var/jenkins_home
     ports:
       - 8070:8080
     networks:

@@ -21,6 +21,7 @@ pipeline {
                 script {
                     if (env.BRANCH_NAME == "master") {
                         sh "chmod +x publish.sh"
+                        docker
                         sh "./publish.sh"
                     }
                 }
