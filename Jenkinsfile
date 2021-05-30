@@ -1,9 +1,10 @@
 #!groovy
 
 
-node('builder') {
-    pipeline {
-        agent any
+pipeline {
+    agent any
+
+    node('builder') {
 
         stages {
             stage('Build') {
@@ -30,4 +31,6 @@ node('builder') {
             }
         }
     }
+
 }
+
