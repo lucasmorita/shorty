@@ -2,7 +2,7 @@
 
 
 pipeline {
-    agent { label 'builder'}
+    agent { label 'docker'}
 
     stages {
         stage('Build') {

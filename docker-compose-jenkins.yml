@@ -1,0 +1,11 @@
+version: "3.5"
+
+services:
+  jenkins:
+    domainname: jenkins.shorty
+    image: jenkins/jenkins:jdk11
+    container_name: shorty_jenkins
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+    ports:
+      - 8070:8080
