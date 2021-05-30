@@ -1,7 +1,0 @@
-version: "3.5"
-
-services:
-  postgres:
-    domainname: mysql.local.shorty
-    container_name: shorty_mysql
-    image: mysql:8.0.25
